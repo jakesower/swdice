@@ -35,6 +35,8 @@ view model =
             ]
          ]
             ++ successView model.d6s model.d10s
+            ++ [ div [ style "height" "30px" ] [] ]
+            ++ tuplesView model.d6s model.d10s
         )
 
 
@@ -43,8 +45,12 @@ successView d6s d10s =
         row =
             \succs prob ->
                 div []
-                    [ span [ style "padding-right" "40px" ] [ text (String.fromInt succs) ]
-                    , span [] [ text (toPercent prob) ]
+                    [ span
+                        [ style "display" "inline-block", style "width" "150px" ]
+                        [ text (String.fromInt succs) ]
+                    , span
+                        [ style "display" "inline-block", style "width" "3em", style "text-align" "right" ]
+                        [ text (toPercent prob) ]
                     ]
     in
     List.indexedMap
@@ -52,6 +58,61 @@ successView d6s d10s =
         (poolSuccesses d6s d10s)
 
 
+tupleTests =
+    [ ( "Pairs", \x -> x.a >= 2 )
+    , ( "Triples" , \x -> x.a >= 3 )
+    , ( "Quadruples" , \x -> x.a >= 4 )
+    , ( "Quintuples" , \x -> x.a >= 5 )
+    , ( "Sextuples" , \x -> x.a >= 6 )
+    , ( "Septuples" , \x -> x.a >= 7 )
+    ]
+
+
+tuplesView d6s d10s =
+    (tuplePercentages d6s d10s
+        |> testPercentages
+        |> List.map (\tuple ->
+            [ div []
+                [ span
+                    [ style "display" "inline-block", style "width" "150px" ]
+                    [ text (Tuple.first tuple) ]
+                , span
+                    [ style "display" "inline-block", style "width" "3em", style "text-align" "right" ]
+                    [ text (toPercent (Tuple.second tuple)) ]
+                ]
+            ])
+        |> List.concat)
+
+testPercentages : List Outcome -> List ( String, Float )
+testPercentages outcomes =
+    List.map
+        (\tup ->
+            let (n, test) = tup
+            in
+            List.map (\o -> if test(o) then o.prob else 0) outcomes
+                |> List.sum
+                |> \x -> (n, x))
+        tupleTests
+
+
+
+tuplePercentages d6s d10s =
+    poolSuccesses d6s d10s
+        |> List.indexedMap (\succs prob -> tupleConfigs succs |> weight prob)
+        |> List.concat
+
+
+weight prob outcomes =
+    List.map (\outcome -> { outcome | prob = outcome.prob * prob }) outcomes
+
+
 toPercent : Float -> String
 toPercent n =
-    (n * 1000) |> round |> toFloat |> (\m -> m / 10) |> String.fromFloat |> (\s -> s ++ "%")
+    if (n >= 0.995) && n /= 1 then
+        ">99%"
+
+    else if ( n < 0.005 && n /= 0) then
+        "<1%"
+
+    else
+        (n * 100) |> round |> String.fromInt |> (\s -> s ++ "%")
