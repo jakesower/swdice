@@ -34,8 +34,9 @@ view model =
             , input [ onInput SetD10s ] []
             ]
          ]
+            ++ [ div [] [ text "--- Successes"] ]
             ++ successView model.d6s model.d10s
-            ++ [ div [ style "height" "30px" ] [] ]
+            ++ [ div [] [ text "--- Tuples"] ]
             ++ tuplesView model.d6s model.d10s
         )
 

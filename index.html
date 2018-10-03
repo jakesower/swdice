@@ -4757,25 +4757,25 @@ var elm$core$Basics$max = F2(
 var elm$core$Elm$JsArray$length = _JsArray_length;
 var elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.d) {
+		if (!builder.a) {
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.f),
+				elm$core$Elm$JsArray$length(builder.c),
 				elm$core$Array$shiftStep,
 				elm$core$Elm$JsArray$empty,
-				builder.f);
+				builder.c);
 		} else {
-			var treeLen = builder.d * elm$core$Array$branchFactor;
+			var treeLen = builder.a * elm$core$Array$branchFactor;
 			var depth = elm$core$Basics$floor(
 				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.g) : builder.g;
-			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.d);
+			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.d) : builder.d;
+			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.a);
 			return A4(
 				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.f) + treeLen,
+				elm$core$Elm$JsArray$length(builder.c) + treeLen,
 				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
 				tree,
-				builder.f);
+				builder.c);
 		}
 	});
 var elm$core$Basics$idiv = _Basics_idiv;
@@ -4788,7 +4788,7 @@ var elm$core$Array$initializeHelp = F5(
 				return A2(
 					elm$core$Array$builderToArray,
 					false,
-					{g: nodeList, d: (len / elm$core$Array$branchFactor) | 0, f: tail});
+					{d: nodeList, a: (len / elm$core$Array$branchFactor) | 0, c: tail});
 			} else {
 				var leaf = elm$core$Array$Leaf(
 					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
@@ -5115,7 +5115,7 @@ var author$project$Main$weight = F2(
 var elm$core$Basics$compare = _Utils_compare;
 var author$project$Probabilities$compareOutcomes = F2(
 	function (x, y) {
-		return (!_Utils_eq(x.u, y.u)) ? A2(elm$core$Basics$compare, x.u, y.u) : ((!_Utils_eq(x.a, y.a)) ? A2(elm$core$Basics$compare, x.a, y.a) : ((!_Utils_eq(x.b, y.b)) ? A2(elm$core$Basics$compare, x.b, y.b) : ((!_Utils_eq(x.c, y.c)) ? A2(elm$core$Basics$compare, x.c, y.c) : 1)));
+		return (!_Utils_eq(x.u, y.u)) ? A2(elm$core$Basics$compare, x.u, y.u) : ((!_Utils_eq(x.e, y.e)) ? A2(elm$core$Basics$compare, x.e, y.e) : ((!_Utils_eq(x.f, y.f)) ? A2(elm$core$Basics$compare, x.f, y.f) : ((!_Utils_eq(x.h, y.h)) ? A2(elm$core$Basics$compare, x.h, y.h) : 1)));
 	});
 var author$project$Probabilities$mergeEquivalents = F2(
 	function (xs, ys) {
@@ -5175,9 +5175,9 @@ var elm$core$List$concat = function (lists) {
 	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
 };
 var author$project$Probabilities$weightedOutcomes = function (outcome) {
-	var cWeight = _Utils_eq(outcome.b, outcome.c) ? 0.5 : 0.25;
-	var bWeight = _Utils_eq(outcome.a, outcome.c) ? 0.75 : (_Utils_eq(outcome.a, outcome.b) ? 0.5 : 0.25);
-	var aWeight = _Utils_eq(outcome.u, outcome.c) ? 1 : (_Utils_eq(outcome.u, outcome.b) ? 0.75 : (_Utils_eq(outcome.u, outcome.a) ? 0.5 : 0.25));
+	var cWeight = _Utils_eq(outcome.f, outcome.h) ? 0.5 : 0.25;
+	var bWeight = _Utils_eq(outcome.e, outcome.h) ? 0.75 : (_Utils_eq(outcome.e, outcome.f) ? 0.5 : 0.25);
+	var aWeight = _Utils_eq(outcome.u, outcome.h) ? 1 : (_Utils_eq(outcome.u, outcome.f) ? 0.75 : (_Utils_eq(outcome.u, outcome.e) ? 0.5 : 0.25));
 	return elm$core$List$concat(
 		_List_fromArray(
 			[
@@ -5187,30 +5187,30 @@ var author$project$Probabilities$weightedOutcomes = function (outcome) {
 					outcome,
 					{u: outcome.u + 1, R: outcome.R * aWeight})
 				]),
-				_Utils_eq(outcome.u, outcome.a) ? _List_Nil : _List_fromArray(
+				_Utils_eq(outcome.u, outcome.e) ? _List_Nil : _List_fromArray(
 				[
 					_Utils_update(
 					outcome,
-					{a: outcome.a + 1, R: outcome.R * bWeight})
+					{e: outcome.e + 1, R: outcome.R * bWeight})
 				]),
-				_Utils_eq(outcome.a, outcome.b) ? _List_Nil : _List_fromArray(
+				_Utils_eq(outcome.e, outcome.f) ? _List_Nil : _List_fromArray(
 				[
 					_Utils_update(
 					outcome,
-					{b: outcome.b + 1, R: outcome.R * cWeight})
+					{f: outcome.f + 1, R: outcome.R * cWeight})
 				]),
-				_Utils_eq(outcome.b, outcome.c) ? _List_Nil : _List_fromArray(
+				_Utils_eq(outcome.f, outcome.h) ? _List_Nil : _List_fromArray(
 				[
 					_Utils_update(
 					outcome,
-					{c: outcome.c + 1, R: outcome.R * 0.25})
+					{h: outcome.h + 1, R: outcome.R * 0.25})
 				])
 			]));
 };
 var author$project$Probabilities$tupleConfigs = function (succs) {
 	return (!succs) ? _List_fromArray(
 		[
-			{u: 0, a: 0, b: 0, c: 0, R: 1}
+			{u: 0, e: 0, f: 0, h: 0, R: 1}
 		]) : A3(
 		elm$core$List$foldr,
 		author$project$Probabilities$mergeEquivalents,
