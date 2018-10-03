@@ -1,4 +1,4 @@
-module Probabilities exposing (poolSuccesses, tupleConfigurations, tupleConfigs, Outcome)
+module Probabilities exposing (poolSuccesses, tupleConfigs, Outcome)
 
 import List exposing (head, tail)
 import List.Extra exposing (last, zip)
@@ -38,8 +38,6 @@ applySuccessStep list succ =
         ++ [ Maybe.withDefault 0.0 (last list) * succ ]
 
 
-
--- tupleConfigurations : Int -> List ( Float, { on} )
 
 tupleConfigs succs =
     if succs == 0 then
@@ -115,79 +113,3 @@ compareOutcomes x y =
         else if x.c /= y.c then (compare x.c y.c)
         else if x.d /= y.d then (compare x.d y.d)
         else EQ
-
-tupleConfigurations succ =
-    runTC succ { prob = 1, a = 0, b = 0, c = 0, d = 0 }
-
-
-runTC : Int -> Outcome -> List Outcome
-runTC succ outcome =
-    if succ == 0 then
-        [ outcome ]
-
-    else
-        let
-            aWeight =
-                if outcome.a == outcome.d then
-                    1
-
-                else if outcome.a == outcome.c then
-                    0.75
-
-                else if outcome.a == outcome.b then
-                    0.5
-
-                else
-                    0.25
-
-            bWeight =
-                if outcome.b == outcome.d then
-                    0.75
-
-                else if outcome.b == outcome.c then
-                    0.5
-
-                else
-                    0.25
-
-            cWeight =
-                if outcome.c == outcome.d then
-                    0.5
-
-                else
-                    0.25
-        in
-        List.concat
-            [ runTC (succ - 1) { outcome | prob = outcome.prob * aWeight, a = outcome.a + 1 }
-            , if outcome.a == outcome.b then
-                []
-
-              else
-                runTC (succ - 1) { outcome | prob = outcome.prob * bWeight, b = outcome.b + 1 }
-            , if outcome.b == outcome.c then
-                []
-
-              else
-                runTC (succ - 1) { outcome | prob = outcome.prob * cWeight, c = outcome.c + 1 }
-            , if outcome.c == outcome.d then
-                []
-
-              else
-                runTC (succ - 1) { outcome | prob = outcome.prob * 0.25, d = outcome.d + 1 }
-            ]
-
-
--- combineEqual : List Outcome -> List Outcome
--- combineEqual outcomes =
---     List.groupBy (\x y -> x.a == y.a && x.b == y.b && x.c == y.c && x.d == y.d)
---         |> List.foldr (\x y -> { acc | prob = x.prob + y.prob })
---         |> List.concat
-
-
-pairProb : Outcome -> Float
-pairProb outcome =
-    if outcome.a >= 2 then
-        outcome.prob
-
-    else
-        0
